@@ -4,7 +4,7 @@ var selectedColor;
 var selectedStrokeWeight;
 
 function preload() {
-  mushroom = loadImage("mushroom.png");
+  owl = loadImage("owl.png");
 }
 
 function setup() {
@@ -23,6 +23,15 @@ function setup() {
   ];
   fillWeightsArray();
   rectMode(RADIUS); // draws rectangles from center
+
+}
+
+// draws a white rectangle over what the user has colored
+// but under the image to simulate a reset
+function resetVariables() {
+	noStroke();
+	fill(255);
+	rect(0, 0, 800, 400);
 }
 
 function mouseDragged() {
@@ -40,19 +49,61 @@ function mousePressed() {
 }
 
 function draw() {
-  image(mushroom, 200, 0);
+  image(owl, 180, 0);
   fill(255);
   rectMode(CORNER);
   rect(0, 400, 800, 200);
-  drawWeightButtons();
   drawColorButtons();
   drawResetButton();
+  drawWeightButtons();
+  drawEraserButtons();
   selectColor();
+
+}
+
+function drawColorButtons() {
+  fill(0);
+  text("COLORS", 125, 435);
+  noStroke();
+  rectMode(RADIUS);
+  for (i = 0; i < colors.length - 1; i++) {
+    fill(colors[i]);
+    rect(140 + 40 * i, 460, 16, 16)
+  }
+}
+
+function selectColor() {
+  if (mouseX >= 132 && mouseX <= 148 && mouseY >= 452 && mouseY <= 468 && mouseIsPressed) {
+    selectedColor = colors[0];
+  } else {
+    fill(0, 255, 0);
+  }
+}
+
+function drawResetButton() {
+	  if (mouseX > 125 && mouseX < 195 && mouseY > 514 && mouseY < 546 && mouseIsPressed) { // clicked state
+    fill(181, 218, 252);
+  } else	if (mouseX > 125 && mouseX < 195 && mouseY > 514 && mouseY < 546) { // hover state
+    fill(200);
+  }	else	{
+    fill(225);
+  }
+  noStroke();
+  rectMode(CORNER);
+  rect(125, 514, 70, 32);
+  fill(0);
+  text("RESET", 140, 535);
+}
+
+function mouseReleased() {
+  if (mouseX > 125 && mouseX < 195 && mouseY > 514 && mouseY < 546) {
+    resetVariables();
+  }
 }
 
 function drawWeightButtons() {
   fill(0);
-  text("PEN WEIGHT", 485, 430);
+  text("PEN WEIGHT", 485, 435);
   noStroke();
   rectMode(RADIUS);
   for (i = 0; i < weights.length; i++) {
@@ -63,34 +114,17 @@ function drawWeightButtons() {
   }
 }
 
-
-
-function drawColorButtons() {
+function drawEraserButtons() {
   fill(0);
-  text("COLORS", 85, 430);
+  text("ERASER", 485, 505);
   noStroke();
   rectMode(RADIUS);
-  for (i = 0; i < colors.length - 1; i++) {
-    fill(colors[i]);
-    rect(100 + 40 * i, 460, 16, 16)
+  for (i = 0; i < weights.length; i++) {
+    fill(225);
+    rect(500 + 40 * i, 530, 16, 16);
+    fill(255);
+    ellipse(500 + 40 * i, 530, weights[i] * 2, weights[i] * 2);
   }
-}
-
-function selectColor() {
-  if (mouseX >= 92 && mouseX <= 108 && mouseY >= 452 && mouseY <= 468 && mouseIsPressed) {
-    selectedColor = colors[0];
-  } else {
-    fill(0, 255, 0);
-  }
-}
-
-function drawResetButton() {
-  noStroke();
-  fill(225);
-  rectMode(CORNER);
-  rect(85, 500, 70, 30);
-  fill(0);
-  text("RESET", 100, 520);
 }
 
 function fillWeightsArray() {
