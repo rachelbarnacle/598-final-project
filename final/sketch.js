@@ -43,26 +43,40 @@ function draw() {
   rect(0, 400, 800, 200);
   drawWeightButtons();
   drawColorButtons();
+  drawResetButton();
 }
 
 function drawWeightButtons() {
+  fill(0);
+  text("PEN WEIGHT", 485, 430);
   noStroke();
   rectMode(RADIUS);
   for (i = 0; i < weights.length; i++) {
     fill(225);
-    rect(100 + 40 * i, 410, 16, 16);
+    rect(500 + 40 * i, 460, 16, 16);
     fill(0);
-    ellipse(100 + 40 * i, 410, weights[i], weights[i]);
+    ellipse(500 + 40 * i, 460, weights[i], weights[i]);
   }
 }
 
 function drawColorButtons() {
+	 fill(0);
+  text("COLORS", 85, 430);
   noStroke();
   rectMode(RADIUS);
   for (i = 0; i < colors.length - 1; i++) {
     fill(colors[i]);
     rect(100 + 40 * i, 460, 16, 16)
   }
+}
+
+function drawResetButton() {
+	noStroke();
+	fill(225);
+	rectMode(CORNER);
+	rect(85, 500, 70, 30);
+	fill(0);
+	text("RESET", 100, 520);
 }
 
 function fillWeightsArray() {
