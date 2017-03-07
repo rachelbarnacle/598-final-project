@@ -3,7 +3,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(600, 1000);
+  createCanvas(800, 600);
 }
 
 function mouseDragged() {
@@ -11,10 +11,15 @@ function mouseDragged() {
   fill(255, 0, 0);
   ellipse(mouseX, mouseY, 10, 10);
 }
+
+function mousePressed() {
+  noStroke();
+  fill(255, 0, 0);
+  ellipse(mouseX, mouseY, 10, 10);
+}
   
 function draw() {
-  // noStroke();
-  // fill(255, 0, 0);
-  // ellipse(mouseX, mouseY, 10, 10);
-  image(mushroom, 0, 0);
+
+  image(mushroom, 200, 0);
+  
 }
