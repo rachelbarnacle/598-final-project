@@ -1,5 +1,7 @@
 var weights = [];
 var colors = [];
+var selectedColor;
+var selectedStrokeWeight;
 
 function preload() {
   mushroom = loadImage("mushroom.png");
@@ -7,6 +9,7 @@ function preload() {
 
 function setup() {
   createCanvas(800, 600);
+  selectedColor = color(0);
   colors = [ // creates array of colors
     (color(255, 0, 0)), // red
     (color(255, 119, 0)), // orange
@@ -24,14 +27,14 @@ function setup() {
 
 function mouseDragged() {
   noStroke();
-  fill(255, 0, 0);
+  fill(selectedColor);
   ellipse(mouseX, mouseY, 10, 10);
 }
 
 function mousePressed() {
   if (mouseY < 500) {
     noStroke();
-    fill(255, 0, 0);
+    fill(selectedColor);
     ellipse(mouseX, mouseY, 10, 10);
   }
 }
@@ -44,6 +47,7 @@ function draw() {
   drawWeightButtons();
   drawColorButtons();
   drawResetButton();
+  selectColor();
 }
 
 function drawWeightButtons() {
@@ -54,13 +58,15 @@ function drawWeightButtons() {
   for (i = 0; i < weights.length; i++) {
     fill(225);
     rect(500 + 40 * i, 460, 16, 16);
-    fill(0);
+    fill(selectedColor);
     ellipse(500 + 40 * i, 460, weights[i], weights[i]);
   }
 }
 
+
+
 function drawColorButtons() {
-	 fill(0);
+  fill(0);
   text("COLORS", 85, 430);
   noStroke();
   rectMode(RADIUS);
@@ -70,13 +76,21 @@ function drawColorButtons() {
   }
 }
 
+function selectColor() {
+  if (mouseX >= 92 && mouseX <= 108 && mouseY >= 452 && mouseY <= 468 && mouseIsPressed) {
+    selectedColor = colors[0];
+  } else {
+    fill(0, 255, 0);
+  }
+}
+
 function drawResetButton() {
-	noStroke();
-	fill(225);
-	rectMode(CORNER);
-	rect(85, 500, 70, 30);
-	fill(0);
-	text("RESET", 100, 520);
+  noStroke();
+  fill(225);
+  rectMode(CORNER);
+  rect(85, 500, 70, 30);
+  fill(0);
+  text("RESET", 100, 520);
 }
 
 function fillWeightsArray() {
