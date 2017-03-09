@@ -57,7 +57,7 @@ function mousePressed() {
   if (mouseY < 500) {
     noStroke();
     fill(selectedColor);
-    ellipse(mouseX, mouseY, 10, 10);
+    ellipse(mouseX, mouseY, selectedStrokeWeight, selectedStrokeWeight);
   }
 }
 
