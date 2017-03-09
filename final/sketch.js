@@ -1,7 +1,14 @@
-var weights = [];
-var colors = [];
-var selectedColor;
-var selectedStrokeWeight;
+var weights = []; // array of numbers used for stroke weights
+var colors = []; // array of colors
+var selectedColor; // current color selected by user
+var selectedStrokeWeight; // current stroke weight selected by user
+var squareButtonSize = 32; // size of square buttons
+var firstRowButtonTop = 444; // where the first row of buttons aligns (top)
+var firstRowButtonBottom = firstRowButtonTop + squareButtonSize; // where the first row of buttons aligns (bottom)
+var secondRowButtonTop = 514; // where the second row of buttons aligns (top)
+var secondRowButtonBottom = secondRowButtonTop + squareButtonSize; // where the second row of buttons aligns (bottom)
+var dashboardColumnLeft = 125; // where x-position of left column starts
+var dashboardColumnRight = 485; // where x-position of right column starts
 
 function preload() {
   owl = loadImage("owl.png");
@@ -9,7 +16,6 @@ function preload() {
 
 function setup() {
   createCanvas(800, 600);
-  selectedColor = color(0);
   colors = [ // creates array of colors
     (color(255, 0, 0)), // red
     (color(255, 119, 0)), // orange
@@ -21,23 +27,30 @@ function setup() {
     (color(0)), // black
     (color(255)) // white
   ];
-  fillWeightsArray();
-  rectMode(RADIUS); // draws rectangles from center
-
+  selectedColor = colors[0]; // default selected color is black
+  fillWeightsArray(); // 
+  selectedStrokeWeight = weights[2]; // default selected color is middle-sized stroke
 }
 
-// draws a white rectangle over what the user has colored
-// but under the image to simulate a reset
-function resetVariables() {
-	noStroke();
-	fill(255);
-	rect(0, 0, 800, 400);
+function draw() {
+  image(owl, 180, 0);
+  noStroke();
+  fill(255);
+  rect(0, 400, 800, 200);
+  drawColorButtons();
+  drawResetButton();
+  drawWeightButtons();
+  drawEraserButtons();
+  selectColor();
+  selectWeight();
+  highlightSelected();
+  erase();
 }
 
 function mouseDragged() {
-  noStroke();
-  fill(selectedColor);
-  ellipse(mouseX, mouseY, 10, 10);
+  stroke(selectedColor)
+  strokeWeight(selectedStrokeWeight);
+  line(pmouseX, pmouseY, mouseX, mouseY);
 }
 
 function mousePressed() {
@@ -48,87 +61,126 @@ function mousePressed() {
   }
 }
 
-function draw() {
-  image(owl, 180, 0);
-  fill(255);
-  rectMode(CORNER);
-  rect(0, 400, 800, 200);
-  drawColorButtons();
-  drawResetButton();
-  drawWeightButtons();
-  drawEraserButtons();
-  selectColor();
-
-}
-
-function drawColorButtons() {
-  fill(0);
-  text("COLORS", 125, 435);
-  noStroke();
-  rectMode(RADIUS);
-  for (i = 0; i < colors.length - 1; i++) {
-    fill(colors[i]);
-    rect(140 + 40 * i, 460, 16, 16)
-  }
-}
-
-function selectColor() {
-  if (mouseX >= 132 && mouseX <= 148 && mouseY >= 452 && mouseY <= 468 && mouseIsPressed) {
-    selectedColor = colors[0];
-  } else {
-    fill(0, 255, 0);
-  }
-}
-
-function drawResetButton() {
-	  if (mouseX > 125 && mouseX < 195 && mouseY > 514 && mouseY < 546 && mouseIsPressed) { // clicked state
-    fill(181, 218, 252);
-  } else	if (mouseX > 125 && mouseX < 195 && mouseY > 514 && mouseY < 546) { // hover state
-    fill(200);
-  }	else	{
-    fill(225);
-  }
-  noStroke();
-  rectMode(CORNER);
-  rect(125, 514, 70, 32);
-  fill(0);
-  text("RESET", 140, 535);
-}
-
 function mouseReleased() {
-  if (mouseX > 125 && mouseX < 195 && mouseY > 514 && mouseY < 546) {
+  if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > 514 && mouseY < 546) {
     resetVariables();
   }
 }
 
-function drawWeightButtons() {
-  fill(0);
-  text("PEN WEIGHT", 485, 435);
-  noStroke();
-  rectMode(RADIUS);
-  for (i = 0; i < weights.length; i++) {
-    fill(225);
-    rect(500 + 40 * i, 460, 16, 16);
-    fill(selectedColor);
-    ellipse(500 + 40 * i, 460, weights[i], weights[i]);
-  }
-}
-
-function drawEraserButtons() {
-  fill(0);
-  text("ERASER", 485, 505);
-  noStroke();
-  rectMode(RADIUS);
-  for (i = 0; i < weights.length; i++) {
-    fill(225);
-    rect(500 + 40 * i, 530, 16, 16);
-    fill(255);
-    ellipse(500 + 40 * i, 530, weights[i] * 2, weights[i] * 2);
-  }
-}
-
+// fills weights array with values that increase by a multiple of 2
 function fillWeightsArray() {
   for (i = 1; i <= 5; i++) {
     append(weights, i * 2);
+  }
+}
+
+// draws a label for Color buttons and a square button for each index 
+// of the colors array (except the last item, white)
+function drawColorButtons() {
+  fill(0);
+  noStroke();
+  text("COLORS", dashboardColumnLeft, 435);
+  for (i = 0; i < colors.length - 1; i++) {
+    fill(colors[i]);
+    rect(dashboardColumnLeft + 40 * i, 444, squareButtonSize, squareButtonSize)
+  }
+}
+
+function highlightSelected() {
+  for (i = 0; i < colors.length - 1; i++) {
+    if (colors[i] == selectedColor) {
+      noFill()
+      strokeWeight(3);
+      stroke(0);
+      rect(dashboardColumnLeft + 40 * i, 444, squareButtonSize, squareButtonSize);
+      noStroke();
+    }
+  }
+  for (i = 0; i < weights.length; i++) {
+    if (weights[i] == selectedStrokeWeight) {
+      noFill()
+      strokeWeight(3);
+      stroke(0);
+      rect(dashboardColumnRight + 40 * i, 444, squareButtonSize, squareButtonSize);
+      noStroke();
+    }
+  }
+}
+
+// draws a label for Pen Weight buttons and a square button with an
+// ellipse in the middle to indicate stroke weight, for each index 
+// of the weights array
+function drawWeightButtons() {
+  fill(0);
+  text("PEN WEIGHT", dashboardColumnRight, 435);
+  noStroke();
+  for (i = 0; i < weights.length; i++) {
+    fill(225);
+    rect(dashboardColumnRight + 40 * i, 444, squareButtonSize, squareButtonSize);
+    fill(selectedColor);
+    ellipse(501 + 40 * i, 460, weights[i], weights[i]);
+  }
+}
+
+// draws a label for Eraser buttons and a square button with an 
+// ellipse in the middle to indicate stroke weight, for each index
+// of the weights array (stroke weights doubled for erasing)
+function drawEraserButtons() {
+  fill(0);
+  text("ERASER", dashboardColumnRight, 505);
+  noStroke();
+  for (i = 0; i < weights.length; i++) {
+    fill(225);
+    rect(dashboardColumnRight + 40 * i, 514, squareButtonSize, squareButtonSize);
+    fill(255);
+    ellipse(501 + 40 * i, 530, weights[i] * 2, weights[i] * 2);
+  }
+}
+
+// draws the reset button
+function drawResetButton() {
+  if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > 514 && mouseY < 546 && mouseIsPressed) { // clicked state
+    fill(181, 218, 252);
+  } else if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > 514 && mouseY < 546) { // hover state
+    fill(200);
+  } else {
+    fill(225);
+  }
+  noStroke();
+  rect(dashboardColumnLeft, 514, 70, 32);
+  fill(0);
+  text("RESET", 140, 535);
+}
+
+// draws a white rectangle over what the user has colored
+// but under the image to simulate a reset
+function resetVariables() {
+  noStroke();
+  fill(255);
+  rect(0, 0, 800, 400);
+}
+
+function selectColor() {
+  for (i = 0; i < colors.length - 1; i++) {
+    if (mouseX >= dashboardColumnLeft + 40 * i && mouseX <= dashboardColumnLeft + squareButtonSize + 40 * i && mouseY >= firstRowButtonTop && mouseY <= firstRowButtonBottom && mouseIsPressed) {
+      selectedColor = colors[i];
+    }
+  }
+}
+
+function selectWeight() {
+  for (i = 0; i < weights.length; i++) {
+    if (mouseX >= dashboardColumnRight + 40 * i && mouseX <= dashboardColumnRight + squareButtonSize + 40 * i && mouseY >= firstRowButtonTop && mouseY <= firstRowButtonBottom && mouseIsPressed) {
+      selectedStrokeWeight = weights[i];
+    }
+  }
+}
+
+function erase() {
+  for (i = 0; i < weights.length; i++) {
+    if (mouseX >= dashboardColumnRight + 40 * i && mouseX <= dashboardColumnRight + squareButtonSize + 40 * i && mouseY >= secondRowButtonTop && mouseY <= secondRowButtonBottom && mouseIsPressed) {
+      selectedStrokeWeight = weights[i] * 2;
+      selectedColor = colors[8];
+    }
   }
 }
