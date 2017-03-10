@@ -1,5 +1,5 @@
 // Created by: Rachel Barnecut & Layne Soike
-// Last edited: 3/9/17
+// Last edited: 3/10/17
 // Description
 
 var weights = []; // array of numbers used for stroke weights
@@ -13,7 +13,7 @@ var secondRowButtonTop = 514; // where the second row of buttons aligns (top)
 var secondRowButtonBottom = secondRowButtonTop + squareButtonSize; // where the second row of buttons aligns (bottom)
 var dashboardColumnLeft = 125; // where x-position of left column starts
 var dashboardColumnRight = 485; // where x-position of right column starts
-var drawOrErase = 0; // 0 == drawing with color, 1 == erasing
+var drawOrErase = 0; // 0 == dcoloring, 1 == erasing
 var previousColor; // stores last color selected
 var previousStrokeWeight; // stores last stroke weight selected (color)
 
@@ -22,7 +22,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(800, 600);
+  createCanvas(800, 600); // canvas size 800x600
   colors = [ // creates array of colors
     (color(255, 0, 0)), // red
     (color(255, 119, 0)), // orange
@@ -35,7 +35,7 @@ function setup() {
     (color(255)) // white
   ];
   selectedColor = colors[0]; // default selected color is black
-  fillWeightsArray(); // 
+  fillWeightsArray(); // calls function to fill weights[]
   selectedStrokeWeight = weights[2]; // default selected color is middle-sized stroke
 }
 
@@ -55,93 +55,97 @@ function draw() {
   erase();
 }
 
+// when mouse is dragged, user is able to color or erase in the coloring area based on selected color and stroke weight
 function mouseDragged() {
-  stroke(selectedColor);
-  strokeWeight(selectedStrokeWeight);
-  line(pmouseX, pmouseY, mouseX, mouseY);
+  stroke(selectedColor); // stroke color based on user's current selection
+  strokeWeight(selectedStrokeWeight); // stroke weight based on user's current selection
+  line(pmouseX, pmouseY, mouseX, mouseY); // draws line between mouse's current x-y position and previous x-y position
 }
 
+// when mouse is pressed within the coloring area (above 500), a single click (no movement) paints a dot
 function mousePressed() {
-  if (mouseY < 500) {
-    noStroke();
-    fill(selectedColor);
-    ellipse(mouseX, mouseY, selectedStrokeWeight, selectedStrokeWeight);
+  if (mouseY < 500) { // above the dashboard
+    noStroke(); // no stroke around the ellipse
+    fill(selectedColor); // fill color of ellipse based on user's current selection
+    ellipse(mouseX, mouseY, selectedStrokeWeight, selectedStrokeWeight); // size of ellipse based on user's current selection
   }
 }
 
+
 function mouseReleased() {
-  if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > secondRowButtonTop && mouseY < 546) {
-    resetVariables();
-  } else if (mouseX > dashboardColumnLeft + 90 && mouseX < 285 && mouseY > secondRowButtonTop && mouseY < 546) {
-		save("myColoring.png");
+  if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > secondRowButtonTop && mouseY < 546) { // if user release mouse when within the range of the reset button
+    resetVariables(); // call function to reset the variables
+  } else if (mouseX > dashboardColumnLeft + 90 && mouseX < 285 && mouseY > secondRowButtonTop && mouseY < 546) { // if user releases mouse when within the range of the save button
+		save("myColoring.png"); // save the canvas
   }
 }
 
 // fills weights array with values that increase by a multiple of 2
 function fillWeightsArray() {
   for (i = 1; i <= 5; i++) {
-    append(weights, i * 2);
+    append(weights, i * 2); // add to the array
   }
 }
 
 // draws a label for Color buttons and a square button for each index 
 // of the colors array (except the last item, white)
 function drawColorButtons() {
-  fill(0);
-  noStroke();
-  text("COLORS", dashboardColumnLeft, 435);
-  for (i = 0; i < colors.length - 1; i++) {
-    fill(colors[i]);
-    rect(dashboardColumnLeft + 40 * i, firstRowButtonTop, squareButtonSize, squareButtonSize);
+  fill(0); // label fill set to black
+  noStroke(); // no stroke for label
+  text("COLORS", dashboardColumnLeft, 435); // label for color buttons
+  for (i = 0; i < colors.length - 1; i++) { // create and fill color buttons
+    fill(colors[i]); // fill set to value in colors at index i
+    rect(dashboardColumnLeft + 40 * i, firstRowButtonTop, squareButtonSize, squareButtonSize); // draw button
   }
 }
 
+// highlights the currently selected color/pen weight if coloring, or eraser weight if erasing
 function highlightSelected() {
-  if (drawOrErase === 0) {
-    for (i = 0; i < colors.length - 1; i++) {
-      if (colors[i] == selectedColor) {
-        outline(dashboardColumnLeft + 40 * i, firstRowButtonTop, squareButtonSize, squareButtonSize);
+  if (drawOrErase === 0) { // user is drawing
+    for (i = 0; i < colors.length - 1; i++) { // iterate through colors[] until match is found
+      if (colors[i] == selectedColor) { // when value of colors[] that matches the selected color
+        outline(dashboardColumnLeft + 40 * i, firstRowButtonTop, squareButtonSize, squareButtonSize); // calls outline function to outline this square
       }
     }
-    for (i = 0; i < weights.length; i++) {
-      if (weights[i] == selectedStrokeWeight) {
-        outline(dashboardColumnRight + 40 * i, firstRowButtonTop, squareButtonSize, squareButtonSize);
+    for (i = 0; i < weights.length; i++) {// iterate through weights[] until match is found
+      if (weights[i] == selectedStrokeWeight) { // when value of weights[] that matches the selected pen weight
+        outline(dashboardColumnRight + 40 * i, firstRowButtonTop, squareButtonSize, squareButtonSize); // calls outline function to outline this square
       }
     }
-  } else {
-    for (i = 0; i < weights.length; i++) {
-      if (weights[i] * 2 == selectedStrokeWeight) {
-        outline(dashboardColumnRight + 40 * i, secondRowButtonTop, squareButtonSize, squareButtonSize);
+  } else { // user is erasing
+    for (i = 0; i < weights.length; i++) { // iterate through weights[] until match is found
+      if (weights[i] * 2 == selectedStrokeWeight) { // when value of weights[] * 2 that matches the selected eraser weight
+        outline(dashboardColumnRight + 40 * i, secondRowButtonTop, squareButtonSize, squareButtonSize); // calls outline function to outline this square
       }
     }
   }
 }
 
-// draws a black outline around the button passed
+// draws a black outline around the rectangle passed
 function outline(x, y, w, h) {
-  noFill();
-  strokeWeight(3);
-  stroke(0);
-  rect(x, y, w, h);
-  noStroke();
+  noFill(); // does not fill rectangle
+  strokeWeight(3); // stroke weight set to three
+  stroke(0); // stroke color set to black
+  rect(x, y, w, h); // draws rectangle of size and position passed
+  noStroke(); // removes stroke 
 }
 
 // draws a label for Pen Weight buttons and a square button with an
 // ellipse in the middle to indicate stroke weight, for each index 
 // of the weights array
 function drawWeightButtons() {
-  fill(0);
-  text("PEN WEIGHT", dashboardColumnRight, 435);
-  noStroke();
-  for (i = 0; i < weights.length; i++) {
-    fill(225);
-    rect(dashboardColumnRight + 40 * i, firstRowButtonTop, squareButtonSize, squareButtonSize);
-    if (drawOrErase === 0) {
-      fill(selectedColor);  
-    } else {
-      fill(previousColor);
+  fill(0); // fill set to black (for text)
+  text("PEN WEIGHT", dashboardColumnRight, 435); // label for pen weight buttons
+  noStroke(); // stroke removed
+  for (i = 0; i < weights.length; i++) { // draws a button for each value in weights[]
+    fill(225); // button fill set to light grey
+    rect(dashboardColumnRight + 40 * i, firstRowButtonTop, squareButtonSize, squareButtonSize); // draws square button
+    if (drawOrErase === 0) { // user drawing
+      fill(selectedColor);  // fill of ellipses set to currently selected color
+    } else { // user erasing
+      fill(previousColor); // fill of ellipses set to previously selected color prior to erasing
     }
-    ellipse(501 + 40 * i, 460, weights[i], weights[i]);
+    ellipse(501 + 40 * i, 460, weights[i], weights[i]); // draws an ellipse in the middle of the buttons, size based on value in weights
   }
 }
 
@@ -149,25 +153,25 @@ function drawWeightButtons() {
 // ellipse in the middle to indicate stroke weight, for each index
 // of the weights array (stroke weights doubled for erasing)
 function drawEraserButtons() {
-  fill(0);
-  text("ERASER", dashboardColumnRight, 505);
-  noStroke();
-  for (i = 0; i < weights.length; i++) {
-    fill(225);
-    rect(dashboardColumnRight + 40 * i, secondRowButtonTop, squareButtonSize, squareButtonSize);
-    fill(255);
-    ellipse(501 + 40 * i, 530, weights[i] * 2, weights[i] * 2);
+  fill(0); // fill set to black (for text)
+  text("ERASER", dashboardColumnRight, 505); // label for eraser buttons
+  noStroke(); // stroke removed
+  for (i = 0; i < weights.length; i++) { // draws a button for each value in weights[]
+    fill(225); // button fill set to light grey
+    rect(dashboardColumnRight + 40 * i, secondRowButtonTop, squareButtonSize, squareButtonSize); // draws square button
+    colors[8]; // fill of ellipses set to white
+    ellipse(501 + 40 * i, 530, weights[i] * 2, weights[i] * 2); // draws an ellipse in the middle of the buttons, size doubled based on value in weights
   }
 }
 
 // draws the reset button
 function drawResetButton() {
   if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > secondRowButtonTop && mouseY < 546 && mouseIsPressed) { // clicked state
-    fill(181, 218, 252);
+    fill(181, 218, 252); 
   } else if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > secondRowButtonTop && mouseY < 546) { // hover state
     fill(200);
-  } else {
-    fill(225);
+  } else { // not interacting with
+    fill(225); // light grey
   }
   noStroke();
   rect(dashboardColumnLeft, secondRowButtonTop, 70, 32);
@@ -216,8 +220,6 @@ function selectWeight() {
         selectedColor = previousColor;
         drawOrErase = 0;
       }
-      
-      
       selectedStrokeWeight = weights[i];
     }
   }
