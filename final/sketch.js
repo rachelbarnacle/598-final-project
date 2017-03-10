@@ -1,3 +1,7 @@
+// Created by: Rachel Barnecut & Layne Soike
+// Last edited: 3/9/17
+// Description
+
 var weights = []; // array of numbers used for stroke weights
 var colors = []; // array of colors
 var selectedColor; // current color selected by user
@@ -14,7 +18,7 @@ var previousColor; // stores last color selected
 var previousStrokeWeight; // stores last stroke weight selected (color)
 
 function preload() {
-  owl = loadImage("owl.png");
+  owl = loadImage("images/owl.png");
 }
 
 function setup() {
@@ -42,6 +46,7 @@ function draw() {
   rect(0, 400, 800, 200);
   drawColorButtons();
   drawResetButton();
+  drawSaveButton();
   drawWeightButtons();
   drawEraserButtons();
   selectColor();
@@ -67,6 +72,8 @@ function mousePressed() {
 function mouseReleased() {
   if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > secondRowButtonTop && mouseY < 546) {
     resetVariables();
+  } else if (mouseX > dashboardColumnLeft + 90 && mouseX < 285 && mouseY > secondRowButtonTop && mouseY < 546) {
+		save("myColoring.png");
   }
 }
 
@@ -174,6 +181,21 @@ function resetVariables() {
   noStroke();
   fill(255);
   rect(0, 0, 800, 400);
+}
+
+// draws the save button
+function drawSaveButton() {
+  if (mouseX > dashboardColumnLeft + 90 && mouseX < 285 && mouseY > secondRowButtonTop && mouseY < 546 && mouseIsPressed) { // clicked state
+    fill(181, 218, 252);
+  } else if (mouseX > dashboardColumnLeft + 90 && mouseX < 285 && mouseY > secondRowButtonTop && mouseY < 546) { // hover state
+    fill(200);
+  } else {
+    fill(225);
+  }
+  noStroke();
+  rect(dashboardColumnLeft + 90, secondRowButtonTop, 70, 32);
+  fill(0);
+  text("SAVE", 235, 535);
 }
 
 function selectColor() {
