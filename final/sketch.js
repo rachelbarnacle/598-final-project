@@ -159,7 +159,7 @@ function drawEraserButtons() {
   for (i = 0; i < weights.length; i++) { // draws a button for each value in weights[]
     fill(225); // button fill set to light grey
     rect(dashboardColumnRight + 40 * i, secondRowButtonTop, squareButtonSize, squareButtonSize); // draws square button
-    colors[8]; // fill of ellipses set to white
+    fill(colors[8]); // fill of ellipses set to white
     ellipse(501 + 40 * i, 530, weights[i] * 2, weights[i] * 2); // draws an ellipse in the middle of the buttons, size doubled based on value in weights
   }
 }
@@ -167,72 +167,75 @@ function drawEraserButtons() {
 // draws the reset button
 function drawResetButton() {
   if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > secondRowButtonTop && mouseY < 546 && mouseIsPressed) { // clicked state
-    fill(181, 218, 252); 
+    fill(181, 218, 252); // light blue
   } else if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > secondRowButtonTop && mouseY < 546) { // hover state
-    fill(200);
+    fill(200); // grey
   } else { // not interacting with
     fill(225); // light grey
   }
-  noStroke();
-  rect(dashboardColumnLeft, secondRowButtonTop, 70, 32);
-  fill(0);
-  text("RESET", 140, 535);
+  noStroke(); // stroke removed
+  rect(dashboardColumnLeft, secondRowButtonTop, 70, 32); // draws reset button rectangle
+  fill(0); // fill set to black for label
+  text("RESET", 140, 535); // Reset label drawn on button
 }
 
 // draws a white rectangle over what the user has colored
 // but under the image to simulate a reset
 function resetVariables() {
-  noStroke();
-  fill(255);
-  rect(0, 0, 800, 400);
+  noStroke(); // stroke removed
+  fill(255); // white
+  rect(0, 0, 800, 400); // white rectangle drawn over coloring area
 }
 
 // draws the save button
 function drawSaveButton() {
   if (mouseX > dashboardColumnLeft + 90 && mouseX < 285 && mouseY > secondRowButtonTop && mouseY < 546 && mouseIsPressed) { // clicked state
-    fill(181, 218, 252);
+    fill(181, 218, 252); // light blue
   } else if (mouseX > dashboardColumnLeft + 90 && mouseX < 285 && mouseY > secondRowButtonTop && mouseY < 546) { // hover state
-    fill(200);
-  } else {
-    fill(225);
+    fill(200); // grey
+  } else { // not interacting with
+    fill(225); // light grey
   }
-  noStroke();
-  rect(dashboardColumnLeft + 90, secondRowButtonTop, 70, 32);
-  fill(0);
-  text("SAVE", 235, 535);
+  noStroke(); // stroke removed
+  rect(dashboardColumnLeft + 90, secondRowButtonTop, 70, 32); // draws save button rectangle
+  fill(0); // fill set to black for label
+  text("SAVE", 235, 535); // Save label drawn on button
 }
 
+// changes the color user draws with based on button pressed
 function selectColor() {
-  for (i = 0; i < colors.length - 1; i++) {
-    if (mouseX >= dashboardColumnLeft + 40 * i && mouseX <= dashboardColumnLeft + squareButtonSize + 40 * i && mouseY >= firstRowButtonTop && mouseY <= firstRowButtonBottom && mouseIsPressed) {
-      previousColor = selectedColor;
-      selectedColor = colors[i];
-      selectedStrokeWeight = previousStrokeWeight;
-      drawOrErase = 0;
+  for (i = 0; i < colors.length - 1; i++) { // for all of the colors in colors[] except for white
+    if (mouseX >= dashboardColumnLeft + 40 * i && mouseX <= dashboardColumnLeft + squareButtonSize + 40 * i && mouseY >= firstRowButtonTop && mouseY <= firstRowButtonBottom && mouseIsPressed) { // user clicks one of the color buttons
+      previousColor = selectedColor; // store the previously selected color
+      selectedColor = colors[i]; // set the selected color to the color clicked on by the user
+      selectedStrokeWeight = previousStrokeWeight; // 
+      drawOrErase = 0; // user is coloring
     }
   }
 }
 
+// changes the pen weight the user draws with based on button pressed
 function selectWeight() {
-  for (i = 0; i < weights.length; i++) {
-    if (mouseX >= dashboardColumnRight + 40 * i && mouseX <= dashboardColumnRight + squareButtonSize + 40 * i && mouseY >= firstRowButtonTop && mouseY <= firstRowButtonBottom && mouseIsPressed) {
+  for (i = 0; i < weights.length; i++) { // for all of the values in weights[]
+    if (mouseX >= dashboardColumnRight + 40 * i && mouseX <= dashboardColumnRight + squareButtonSize + 40 * i && mouseY >= firstRowButtonTop && mouseY <= firstRowButtonBottom && mouseIsPressed) { // user clicks one of the pen weight buttons
       if (drawOrErase == 1) { // user previously erasing, just clicked a pen weight button
-        selectedColor = previousColor;
-        drawOrErase = 0;
+        selectedColor = previousColor; // store the pre-erasing color 
+        drawOrErase = 0; // user is now coloring
       }
-      selectedStrokeWeight = weights[i];
+      selectedStrokeWeight = weights[i]; // set the stroke weight to the weight clicked on by the user
     }
   }
 }
 
+// user is erasing (drawing with white) with a selected weight
 function erase() {
-  if (drawOrErase === 0) {
-    previousStrokeWeight = selectedStrokeWeight
+  if (drawOrErase === 0) { // coloring before erasing
+    previousStrokeWeight = selectedStrokeWeight; // store selected stroke weight as the previous stroke weight
   }
-  for (i = 0; i < weights.length; i++) {
-    if (mouseX >= dashboardColumnRight + 40 * i && mouseX <= dashboardColumnRight + squareButtonSize + 40 * i && mouseY >= secondRowButtonTop && mouseY <= secondRowButtonBottom && mouseIsPressed) {
-      selectedStrokeWeight = weights[i] * 2;
-      selectedColor = colors[8];
+  for (i = 0; i < weights.length; i++) { // for all of the values in weights[]
+    if (mouseX >= dashboardColumnRight + 40 * i && mouseX <= dashboardColumnRight + squareButtonSize + 40 * i && mouseY >= secondRowButtonTop && mouseY <= secondRowButtonBottom && mouseIsPressed) { // if the user clicks on one of the eraser buttons
+      selectedStrokeWeight = weights[i] * 2; // sets stroke to weight selected by user, double the value in weights[] 
+      selectedColor = colors[8]; // sets stroke color to white
       drawOrErase = 1; // user is erasing
     }
   }
