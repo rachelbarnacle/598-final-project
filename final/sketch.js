@@ -190,6 +190,12 @@ function selectColor() {
 function selectWeight() {
   for (i = 0; i < weights.length; i++) {
     if (mouseX >= dashboardColumnRight + 40 * i && mouseX <= dashboardColumnRight + squareButtonSize + 40 * i && mouseY >= firstRowButtonTop && mouseY <= firstRowButtonBottom && mouseIsPressed) {
+      if (drawOrErase == 1) { // user previously erasing, just clicked a pen weight button
+        selectedColor = previousColor;
+        drawOrErase = 0;
+      }
+      
+      
       selectedStrokeWeight = weights[i];
     }
   }
