@@ -9,6 +9,9 @@ var secondRowButtonTop = 514; // where the second row of buttons aligns (top)
 var secondRowButtonBottom = secondRowButtonTop + squareButtonSize; // where the second row of buttons aligns (bottom)
 var dashboardColumnLeft = 125; // where x-position of left column starts
 var dashboardColumnRight = 485; // where x-position of right column starts
+var drawOrErase = 0; // 0 == drawing with color, 1 == erasing
+var previousColor; // stores last color selected
+var previousStrokeWeight; // stores last stroke weight selected (color)
 
 function preload() {
   owl = loadImage("owl.png");
@@ -48,7 +51,7 @@ function draw() {
 }
 
 function mouseDragged() {
-  stroke(selectedColor)
+  stroke(selectedColor);
   strokeWeight(selectedStrokeWeight);
   line(pmouseX, pmouseY, mouseX, mouseY);
 }
@@ -62,7 +65,7 @@ function mousePressed() {
 }
 
 function mouseReleased() {
-  if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > 514 && mouseY < 546) {
+  if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > secondRowButtonTop && mouseY < 546) {
     resetVariables();
   }
 }
@@ -82,29 +85,38 @@ function drawColorButtons() {
   text("COLORS", dashboardColumnLeft, 435);
   for (i = 0; i < colors.length - 1; i++) {
     fill(colors[i]);
-    rect(dashboardColumnLeft + 40 * i, 444, squareButtonSize, squareButtonSize)
+    rect(dashboardColumnLeft + 40 * i, firstRowButtonTop, squareButtonSize, squareButtonSize);
   }
 }
 
 function highlightSelected() {
-  for (i = 0; i < colors.length - 1; i++) {
-    if (colors[i] == selectedColor) {
-      noFill()
-      strokeWeight(3);
-      stroke(0);
-      rect(dashboardColumnLeft + 40 * i, 444, squareButtonSize, squareButtonSize);
-      noStroke();
+  if (drawOrErase === 0) {
+    for (i = 0; i < colors.length - 1; i++) {
+      if (colors[i] == selectedColor) {
+        outline(dashboardColumnLeft + 40 * i, firstRowButtonTop, squareButtonSize, squareButtonSize);
+      }
+    }
+    for (i = 0; i < weights.length; i++) {
+      if (weights[i] == selectedStrokeWeight) {
+        outline(dashboardColumnRight + 40 * i, firstRowButtonTop, squareButtonSize, squareButtonSize);
+      }
+    }
+  } else {
+    for (i = 0; i < weights.length; i++) {
+      if (weights[i] * 2 == selectedStrokeWeight) {
+        outline(dashboardColumnRight + 40 * i, secondRowButtonTop, squareButtonSize, squareButtonSize);
+      }
     }
   }
-  for (i = 0; i < weights.length; i++) {
-    if (weights[i] == selectedStrokeWeight) {
-      noFill()
-      strokeWeight(3);
-      stroke(0);
-      rect(dashboardColumnRight + 40 * i, 444, squareButtonSize, squareButtonSize);
-      noStroke();
-    }
-  }
+}
+
+// draws a black outline around the button passed
+function outline(x, y, w, h) {
+  noFill();
+  strokeWeight(3);
+  stroke(0);
+  rect(x, y, w, h);
+  noStroke();
 }
 
 // draws a label for Pen Weight buttons and a square button with an
@@ -116,7 +128,7 @@ function drawWeightButtons() {
   noStroke();
   for (i = 0; i < weights.length; i++) {
     fill(225);
-    rect(dashboardColumnRight + 40 * i, 444, squareButtonSize, squareButtonSize);
+    rect(dashboardColumnRight + 40 * i, firstRowButtonTop, squareButtonSize, squareButtonSize);
     fill(selectedColor);
     ellipse(501 + 40 * i, 460, weights[i], weights[i]);
   }
@@ -131,7 +143,7 @@ function drawEraserButtons() {
   noStroke();
   for (i = 0; i < weights.length; i++) {
     fill(225);
-    rect(dashboardColumnRight + 40 * i, 514, squareButtonSize, squareButtonSize);
+    rect(dashboardColumnRight + 40 * i, secondRowButtonTop, squareButtonSize, squareButtonSize);
     fill(255);
     ellipse(501 + 40 * i, 530, weights[i] * 2, weights[i] * 2);
   }
@@ -139,15 +151,15 @@ function drawEraserButtons() {
 
 // draws the reset button
 function drawResetButton() {
-  if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > 514 && mouseY < 546 && mouseIsPressed) { // clicked state
+  if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > secondRowButtonTop && mouseY < 546 && mouseIsPressed) { // clicked state
     fill(181, 218, 252);
-  } else if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > 514 && mouseY < 546) { // hover state
+  } else if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > secondRowButtonTop && mouseY < 546) { // hover state
     fill(200);
   } else {
     fill(225);
   }
   noStroke();
-  rect(dashboardColumnLeft, 514, 70, 32);
+  rect(dashboardColumnLeft, secondRowButtonTop, 70, 32);
   fill(0);
   text("RESET", 140, 535);
 }
@@ -163,7 +175,10 @@ function resetVariables() {
 function selectColor() {
   for (i = 0; i < colors.length - 1; i++) {
     if (mouseX >= dashboardColumnLeft + 40 * i && mouseX <= dashboardColumnLeft + squareButtonSize + 40 * i && mouseY >= firstRowButtonTop && mouseY <= firstRowButtonBottom && mouseIsPressed) {
+      previousColor = selectedColor;
       selectedColor = colors[i];
+      selectedStrokeWeight = previousStrokeWeight;
+      drawOrErase = 0;
     }
   }
 }
@@ -177,10 +192,14 @@ function selectWeight() {
 }
 
 function erase() {
+  if (drawOrErase === 0) {
+    previousStrokeWeight = selectedStrokeWeight
+  }
   for (i = 0; i < weights.length; i++) {
     if (mouseX >= dashboardColumnRight + 40 * i && mouseX <= dashboardColumnRight + squareButtonSize + 40 * i && mouseY >= secondRowButtonTop && mouseY <= secondRowButtonBottom && mouseIsPressed) {
       selectedStrokeWeight = weights[i] * 2;
       selectedColor = colors[8];
+      drawOrErase = 1; // user is erasing
     }
   }
 }
