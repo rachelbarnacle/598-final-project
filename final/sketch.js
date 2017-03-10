@@ -13,7 +13,7 @@ var secondRowButtonTop = 514; // where the second row of buttons aligns (top)
 var secondRowButtonBottom = secondRowButtonTop + squareButtonSize; // where the second row of buttons aligns (bottom)
 var dashboardColumnLeft = 125; // where x-position of left column starts
 var dashboardColumnRight = 485; // where x-position of right column starts
-var drawOrErase = 0; // 0 == dcoloring, 1 == erasing
+var drawOrErase = 0; // 0 == coloring, 1 == erasing
 var previousColor; // stores last color selected
 var previousStrokeWeight; // stores last stroke weight selected (color)
 
@@ -34,9 +34,11 @@ function setup() {
     (color(0)), // black
     (color(255)) // white
   ];
-  selectedColor = colors[0]; // default selected color is black
+  selectedColor = colors[0]; // default selected color is red
+  previousColor = selectedColor; // initially set to same as selectedColor
   fillWeightsArray(); // calls function to fill weights[]
   selectedStrokeWeight = weights[2]; // default selected color is middle-sized stroke
+  previousStrokeWeight = selectedStrokeWeight; // initially set to selectedStrokeWeight
 }
 
 function draw() {
