@@ -129,7 +129,11 @@ function drawWeightButtons() {
   for (i = 0; i < weights.length; i++) {
     fill(225);
     rect(dashboardColumnRight + 40 * i, firstRowButtonTop, squareButtonSize, squareButtonSize);
-    fill(selectedColor);
+    if (drawOrErase === 0) {
+      fill(selectedColor);  
+    } else {
+      fill(previousColor);
+    }
     ellipse(501 + 40 * i, 460, weights[i], weights[i]);
   }
 }
