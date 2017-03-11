@@ -16,13 +16,15 @@ var dashboardColumnRight = 485; // where x-position of right column starts
 var drawOrErase = 0; // 0 == coloring, 1 == erasing
 var previousColor; // stores last color selected
 var previousStrokeWeight; // stores last stroke weight selected (color)
+var c;
 
 function preload() {
   owl = loadImage("images/owl.png");
 }
 
 function setup() {
-  createCanvas(800, 600); // canvas size 800x600
+  var c = createCanvas(800, 600); // canvas size 800x600
+  background(255);
   colors = [ // creates array of colors
     (color(255, 0, 0)), // red
     (color(255, 119, 0)), // orange
@@ -43,6 +45,15 @@ function setup() {
 
 function draw() {
   image(owl, 180, 0);
+  drawDashboard();
+  selectColor();
+  selectWeight();
+  highlightSelected();
+  erase();
+}
+
+// draws dashboard with buttons
+function drawDashboard() {
   noStroke();
   fill(255);
   rect(0, 400, 800, 200);
@@ -51,10 +62,6 @@ function draw() {
   drawSaveButton();
   drawWeightButtons();
   drawEraserButtons();
-  selectColor();
-  selectWeight();
-  highlightSelected();
-  erase();
 }
 
 // when mouse is dragged, user is able to color or erase in the coloring area based on selected color and stroke weight
@@ -73,12 +80,11 @@ function mousePressed() {
   }
 }
 
-
 function mouseReleased() {
   if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > secondRowButtonTop && mouseY < 546) { // if user release mouse when within the range of the reset button
     resetVariables(); // call function to reset the variables
   } else if (mouseX > dashboardColumnLeft + 90 && mouseX < 285 && mouseY > secondRowButtonTop && mouseY < 546) { // if user releases mouse when within the range of the save button
-		save("myColoring.png"); // save the canvas
+		save(c, "myColoring.png"); // save the canvas
   }
 }
 
@@ -210,7 +216,7 @@ function selectColor() {
     if (mouseX >= dashboardColumnLeft + 40 * i && mouseX <= dashboardColumnLeft + squareButtonSize + 40 * i && mouseY >= firstRowButtonTop && mouseY <= firstRowButtonBottom && mouseIsPressed) { // user clicks one of the color buttons
       previousColor = selectedColor; // store the previously selected color
       selectedColor = colors[i]; // set the selected color to the color clicked on by the user
-      selectedStrokeWeight = previousStrokeWeight; // 
+      selectedStrokeWeight = previousStrokeWeight; // saves previous stroke weight
       drawOrErase = 0; // user is coloring
     }
   }
