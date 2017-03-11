@@ -23,7 +23,7 @@ function preload() {
 }
 
 function setup() {
-  var c = createCanvas(800, 600); // canvas size 800x600
+  createCanvas(800, 600); // canvas size 800x600
   background(255);
   colors = [ // creates array of colors
     (color(255, 0, 0)), // red
@@ -84,7 +84,7 @@ function mouseReleased() {
   if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > secondRowButtonTop && mouseY < 546) { // if user release mouse when within the range of the reset button
     resetVariables(); // call function to reset the variables
   } else if (mouseX > dashboardColumnLeft + 90 && mouseX < 285 && mouseY > secondRowButtonTop && mouseY < 546) { // if user releases mouse when within the range of the save button
-		save(c, "myColoring.png"); // save the canvas
+    save("myColoring.png"); // save the canvas - original save
   }
 }
 
@@ -115,7 +115,7 @@ function highlightSelected() {
         outline(dashboardColumnLeft + 40 * i, firstRowButtonTop, squareButtonSize, squareButtonSize); // calls outline function to outline this square
       }
     }
-    for (i = 0; i < weights.length; i++) {// iterate through weights[] until match is found
+    for (i = 0; i < weights.length; i++) { // iterate through weights[] until match is found
       if (weights[i] == selectedStrokeWeight) { // when value of weights[] that matches the selected pen weight
         outline(dashboardColumnRight + 40 * i, firstRowButtonTop, squareButtonSize, squareButtonSize); // calls outline function to outline this square
       }
@@ -149,7 +149,7 @@ function drawWeightButtons() {
     fill(225); // button fill set to light grey
     rect(dashboardColumnRight + 40 * i, firstRowButtonTop, squareButtonSize, squareButtonSize); // draws square button
     if (drawOrErase === 0) { // user drawing
-      fill(selectedColor);  // fill of ellipses set to currently selected color
+      fill(selectedColor); // fill of ellipses set to currently selected color
     } else { // user erasing
       fill(previousColor); // fill of ellipses set to previously selected color prior to erasing
     }
