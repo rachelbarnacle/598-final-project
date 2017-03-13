@@ -59,7 +59,7 @@ function drawDashboard() {
   drawColorButtons();
   drawResetButton();
   drawSaveButton();
-  drawHomeButton();
+  // drawHomeButton();
   drawWeightButtons();
   drawEraserButtons();
 }
@@ -83,10 +83,10 @@ function mousePressed() {
 function mouseReleased() {
   if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > secondRowButtonTop && mouseY < 546) { // if user release mouse when within the range of the reset button
     resetVariables(); // call function to reset the variables
-  }if (mouseX > dashboardColumnLeft + 90 && mouseX < 285 && mouseY > secondRowButtonTop && mouseY < 546) { // if user releases mouse when within the range of the save button
+  }else	if (mouseX > dashboardColumnLeft + 90 && mouseX < 285 && mouseY > secondRowButtonTop && mouseY < 546) { // if user releases mouse when within the range of the save button
     save("myColoring.png"); // save the canvas - original save
-  } else if (mouseX > dashboardColumnLeft + 240 && mouseX < 435 && mouseY > secondRowButtonTop && mouseY < 546) { // if user releases mouse when within the range of home button
-  	openURL("welcome.html");
+  // } else if (mouseX > dashboardColumnLeft + 240 && mouseX < 435 && mouseY > secondRowButtonTop && mouseY < 546) { // if user releases mouse when within the range of home button
+  // 	openURL("welcome.html");
   }
 }		
 
