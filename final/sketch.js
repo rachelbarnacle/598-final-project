@@ -1,7 +1,10 @@
 // Created by: Rachel Barnecut & Layne Soike
-// Last edited: 3/10/17
-// Description
+// Last edited: 3/12/17
+// Description: The COLOR ME app is a coloring application that allows users to select the
+//    color and pen (stroke) weight they want to color with. Users can also erase, 
+//    reset, and save their image.
 
+var coloringIMG = owl; // outline for coloring
 var weights = []; // array of numbers used for stroke weights
 var colors = []; // array of colors
 var selectedColor; // current color selected by user
@@ -17,13 +20,15 @@ var drawOrErase = 0; // 0 == coloring, 1 == erasing
 var previousColor; // stores last color selected
 var previousStrokeWeight; // stores last stroke weight selected (color)
 
+
+// preloads an image for coloring
 function preload() {
-  owl = loadImage("images/owl.png");
+  coloringIMG = loadImage("images/" + coloringIMG + ".png");
 }
 
 function setup() {
   createCanvas(800, 600); // canvas size 800x600
-  background(255);
+  background(255); // background set to white
   colors = [ // creates array of colors
     (color(255, 0, 0)), // red
     (color(255, 119, 0)), // orange
@@ -43,25 +48,25 @@ function setup() {
 }
 
 function draw() {
-  image(owl, 180, 0);
-  drawDashboard();
-  selectColor();
-  selectWeight();
-  highlightSelected();
-  erase();
+  image(coloringIMG, 180, 0); // draws the coloring image
+  drawDashboard(); // draws the dashboard
+  selectColor(); // provides functionality for selecting color
+  selectWeight(); // provides functionality for selecting pen weight
+  highlightSelected(); // highlights selected color/pen weight or eraser weight
+  erase(); // provides erasing functionality
 }
 
 // draws dashboard with buttons
 function drawDashboard() {
-  noStroke();
-  fill(245);
-  rect(0, 400, 800, 200);
-  drawColorButtons();
-  drawResetButton();
-  drawSaveButton();
+  noStroke(); // removes stroke
+  fill(245); // background color to light grey
+  rect(0, 400, 800, 200); // bounding box for dashboard
+  drawColorButtons(); // calls function to draw color buttons
+  drawResetButton(); // calls function to draw reset button
+  drawSaveButton(); // calls function for save button
   // drawHomeButton();
-  drawWeightButtons();
-  drawEraserButtons();
+  drawWeightButtons(); // calls function to draw pen weights buttons
+  drawEraserButtons(); // calls function to draw eraser buttons
 }
 
 // when mouse is dragged, user is able to color or erase in the coloring area based on selected color and stroke weight
@@ -80,17 +85,19 @@ function mousePressed() {
   }
 }
 
+// when mouse has been released by the user, certain action performed based on 
+// where the mouse was released (whether or not user's mouse was over a button) 
 function mouseReleased() {
   if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > secondRowButtonTop && mouseY < 546) { // if user release mouse when within the range of the reset button
     resetVariables(); // call function to reset the variables
-  }else	if (mouseX > dashboardColumnLeft + 90 && mouseX < 285 && mouseY > secondRowButtonTop && mouseY < 546) { // if user releases mouse when within the range of the save button
+  } else	if (mouseX > dashboardColumnLeft + 90 && mouseX < 285 && mouseY > secondRowButtonTop && mouseY < 546) { // if user releases mouse when within the range of the save button
     save("myColoring.png"); // save the canvas - original save
   // } else if (mouseX > dashboardColumnLeft + 240 && mouseX < 435 && mouseY > secondRowButtonTop && mouseY < 546) { // if user releases mouse when within the range of home button
   // 	openURL("welcome.html");
   }
 }		
 
-// fills weights array with values that increase by a multiple of 2
+// fills weights array with values that increase by a multiple of 2; creates five different weights
 function fillWeightsArray() {
   for (i = 1; i <= 5; i++) {
     append(weights, i * 2); // add to the array
