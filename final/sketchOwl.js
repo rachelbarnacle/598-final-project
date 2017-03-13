@@ -4,7 +4,6 @@
 //    color and pen (stroke) weight they want to color with. Users can also erase, 
 //    reset, and save their image.
 
-var coloringIMG = owl; // outline for coloring
 var weights = []; // array of numbers used for stroke weights
 var colors = []; // array of colors
 var selectedColor; // current color selected by user
@@ -23,7 +22,7 @@ var previousStrokeWeight; // stores last stroke weight selected (color)
 
 // preloads an image for coloring
 function preload() {
-  coloringIMG = loadImage("images/" + coloringIMG + ".png");
+  owl = loadImage("images/owl.png");
 }
 
 function setup() {
@@ -48,7 +47,7 @@ function setup() {
 }
 
 function draw() {
-  image(coloringIMG, 180, 0); // draws the coloring image
+  image(owl, 180, 0); // draws the coloring image
   drawDashboard(); // draws the dashboard
   selectColor(); // provides functionality for selecting color
   selectWeight(); // provides functionality for selecting pen weight
