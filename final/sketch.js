@@ -16,7 +16,6 @@ var dashboardColumnRight = 485; // where x-position of right column starts
 var drawOrErase = 0; // 0 == coloring, 1 == erasing
 var previousColor; // stores last color selected
 var previousStrokeWeight; // stores last stroke weight selected (color)
-var c;
 
 function preload() {
   owl = loadImage("images/owl.png");
@@ -55,11 +54,12 @@ function draw() {
 // draws dashboard with buttons
 function drawDashboard() {
   noStroke();
-  fill(255);
+  fill(245);
   rect(0, 400, 800, 200);
   drawColorButtons();
   drawResetButton();
   drawSaveButton();
+  drawHomeButton();
   drawWeightButtons();
   drawEraserButtons();
 }
@@ -83,10 +83,12 @@ function mousePressed() {
 function mouseReleased() {
   if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > secondRowButtonTop && mouseY < 546) { // if user release mouse when within the range of the reset button
     resetVariables(); // call function to reset the variables
-  } else if (mouseX > dashboardColumnLeft + 90 && mouseX < 285 && mouseY > secondRowButtonTop && mouseY < 546) { // if user releases mouse when within the range of the save button
+  }if (mouseX > dashboardColumnLeft + 90 && mouseX < 285 && mouseY > secondRowButtonTop && mouseY < 546) { // if user releases mouse when within the range of the save button
     save("myColoring.png"); // save the canvas - original save
+  } else if (mouseX > dashboardColumnLeft + 240 && mouseX < 435 && mouseY > secondRowButtonTop && mouseY < 546) { // if user releases mouse when within the range of home button
+  	openURL("welcome.html");
   }
-}
+}		
 
 // fills weights array with values that increase by a multiple of 2
 function fillWeightsArray() {
@@ -146,7 +148,7 @@ function drawWeightButtons() {
   text("PEN WEIGHT", dashboardColumnRight, 435); // label for pen weight buttons
   noStroke(); // stroke removed
   for (i = 0; i < weights.length; i++) { // draws a button for each value in weights[]
-    fill(225); // button fill set to light grey
+    fill(180); // button fill set to light grey
     rect(dashboardColumnRight + 40 * i, firstRowButtonTop, squareButtonSize, squareButtonSize); // draws square button
     if (drawOrErase === 0) { // user drawing
       fill(selectedColor); // fill of ellipses set to currently selected color
@@ -165,7 +167,7 @@ function drawEraserButtons() {
   text("ERASER", dashboardColumnRight, 505); // label for eraser buttons
   noStroke(); // stroke removed
   for (i = 0; i < weights.length; i++) { // draws a button for each value in weights[]
-    fill(225); // button fill set to light grey
+    fill(180); // button fill set to light grey
     rect(dashboardColumnRight + 40 * i, secondRowButtonTop, squareButtonSize, squareButtonSize); // draws square button
     fill(colors[8]); // fill of ellipses set to white
     ellipse(501 + 40 * i, 530, weights[i] * 2, weights[i] * 2); // draws an ellipse in the middle of the buttons, size doubled based on value in weights
@@ -177,12 +179,12 @@ function drawResetButton() {
   if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > secondRowButtonTop && mouseY < 546 && mouseIsPressed) { // clicked state
     fill(181, 218, 252); // light blue
   } else if (mouseX > dashboardColumnLeft && mouseX < 195 && mouseY > secondRowButtonTop && mouseY < 546) { // hover state
-    fill(200); // grey
+    fill(150); // grey
   } else { // not interacting with
-    fill(225); // light grey
+    fill(180); // light grey
   }
   noStroke(); // stroke removed
-  rect(dashboardColumnLeft, secondRowButtonTop, 70, 32); // draws reset button rectangle
+  rect(dashboardColumnLeft, secondRowButtonTop, 72, 32); // draws reset button rectangle
   fill(0); // fill set to black for label
   text("RESET", 140, 535); // Reset label drawn on button
 }
@@ -197,17 +199,32 @@ function resetVariables() {
 
 // draws the save button
 function drawSaveButton() {
-  if (mouseX > dashboardColumnLeft + 90 && mouseX < 285 && mouseY > secondRowButtonTop && mouseY < 546 && mouseIsPressed) { // clicked state
+  if (mouseX > dashboardColumnLeft + 80 && mouseX < 275 && mouseY > secondRowButtonTop && mouseY < 546 && mouseIsPressed) { // clicked state
     fill(181, 218, 252); // light blue
-  } else if (mouseX > dashboardColumnLeft + 90 && mouseX < 285 && mouseY > secondRowButtonTop && mouseY < 546) { // hover state
-    fill(200); // grey
+  } else if (mouseX > dashboardColumnLeft + 80 && mouseX < 275 && mouseY > secondRowButtonTop && mouseY < 546) { // hover state
+    fill(150); // grey
   } else { // not interacting with
-    fill(225); // light grey
+    fill(180); // light grey
   }
   noStroke(); // stroke removed
-  rect(dashboardColumnLeft + 90, secondRowButtonTop, 70, 32); // draws save button rectangle
+  rect(dashboardColumnLeft + 80, secondRowButtonTop, 72, 32); // draws save button rectangle
   fill(0); // fill set to black for label
-  text("SAVE", 235, 535); // Save label drawn on button
+  text("SAVE", 223, 535); // Save label drawn on button
+}
+
+// draws the home button
+function drawHomeButton() {
+  if (mouseX > dashboardColumnLeft + 240 && mouseX < 435 && mouseY > secondRowButtonTop && mouseY < 546 && mouseIsPressed) { // clicked state
+    fill(181, 218, 252); // light blue
+  } else if (mouseX > dashboardColumnLeft + 240 && mouseX <435 && mouseY > secondRowButtonTop && mouseY < 546) { // hover state
+    fill(150); // grey
+  } else { // not interacting with
+    fill(180); // light grey
+  }
+  noStroke(); // stroke removed
+  rect(dashboardColumnLeft + 240, secondRowButtonTop, 72, 32); // draws save button rectangle
+  fill(0); // fill set to black for label
+  text("HOME", 383, 535); // Save label drawn on button
 }
 
 // changes the color user draws with based on button pressed
